@@ -23,9 +23,15 @@ function M.mkdir(new_dir)
 	os.execute(cmd)
 end
 
+function M.chdir(new_dir)
+	-- change directory
+	FileSystemM.chdir(new_dir)
+end
+
 function M.current_directory()
 	-- return the current directory path
 	return FileSystemM.currentdir()
 end
+
 
 return M
