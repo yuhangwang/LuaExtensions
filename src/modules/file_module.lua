@@ -36,11 +36,10 @@ function M.copy(file_source, new_dir)
 	os.execute(cmd)
 end
 
-function M.write_str_to_file (output_file_name,str, mode)
+function M.write_str_to_file (output_file_name, str, mode)
 	-- Write a string into an output file
 	local mode = mode or 'w'
 	local OUT = io.open(output_file_name, mode)
-	print(OUT, output_file_name)
 	io.output(OUT)
 	io.write(str)
 	io.close(OUT)
