@@ -7,22 +7,59 @@
 --------------------------------------------
 local M = {}
 
-local Sys_M_ = require("lfs")
+local SysM = require("lfs")
+local StringM = require("string_module")
 
+function M.extract_columns(file_Input, file_Output, list_Columns, int_NumberOfRowsToSkip, char_CommentSymbol)
+	local list_Output = {}
+	local int_NumberOfRowsToSkip = int_NumberOfRowsToSkip or 0
+	local char_CommentSymbol = char_CommentSymbol  or '#'
+	local str_CommentPattern = string.format("^%s.*", char_CommentSymbol)
+	local ccc = 0 -- line counter
+	for line in io.lines(file_Input) do
+		ccc = ccc + 1
+		if (ccc > int_NumberOfRowsToSkip) and ( not string.match(line, str_CommentPattern) ) then
+			list_Items = StringM.split(line)
+			local list_ExtractedColumns = {}
+			for _, i_Column in pairs(list_Columns) do
+				table.insert(list_ExtractedColumns, list_Items[i_Column])
+			end
+			local line = table.concat(list_ExtractedColumns, ' ')
+			table.insert(list_Output, line)
+		end
+	end
+
+	local io_FileOutput = io.open(file_Output, 'w')
+	local str_Output = table.concat(list_Output, '\n')
+	io.output(io_FileOutput)
+	io.write(str_Output)
+	io.close(io_FileOutput)
+end
 
 function M.read_file_to_list(file_name)
 	-- read an input file and return a list of the content
-	local list_output = {}
+	local list_Output = {}
 	for line in io.lines(file_name) do
-		table.insert(list_output, line)
+		table.insert(list_Output, line)
 	end
-	return list_output
+	return list_Output
 end
+
+function M.read_file_to_2D_list(file_name)
+	-- read an input file and return a 2D list
+	local list2D = {}
+	for line in io.lines(file_name) do 
+		local list_current = StringM.split(line, ' ')
+		table.insert(list2D, list_current)
+	end
+	return list2D
+end
+
 
 function M.ls(dir) 
 	-- Get a list of file names at dir --
 	local list_file_names = {}
-	for file_name in Sys_M_.dir(dir) do
+	for file_name in SysM.dir(dir) do
 		if (file_name ~= ".") and (file_name ~= "..") then
 			table.insert(list_file_names, file_name)
 		end

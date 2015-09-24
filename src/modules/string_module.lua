@@ -7,7 +7,7 @@ local M = {}
 
 function M.split(input_string, delimiter)
 	-- Split a string by "delimiter"
-	local delimiter = delimiter or "%s+"
+	local delimiter = delimiter or "%s"
 	local list_output = {}
 	local regex_delimiter = string.format("([^%s]+)", delimiter)
 	for item in string.gmatch(input_string, regex_delimiter) do
@@ -42,6 +42,20 @@ function M.to_number(input_string)
 			return output
 		end
 	end
+end
+
+function M.convert_dict_to_string(dict_Input, str_KeyValueSeparator)
+	-- Convert a dictionary to a big string
+	-- All the entries are separated by '\n'
+	-- Each entry is converted to a string with key and value 
+	--	separated by str_KeyValueSeparator
+	local list_Lines = {}
+	for key, value in pairs(dict_Input) do
+		local line = string.format("%s%s%s", key, str_KeyValueSeparator, value)
+		table.insert(list_Lines, line)
+	end
+	local str_Output = table.concat(list_Lines, '\n')
+	return str_Output
 end
 
 return M
